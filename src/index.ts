@@ -1,8 +1,10 @@
 import express, { Request, Response } from "express";
+import bodyParser from "body-parser";
 import { oapi } from "./openapi";
 import { todosRouter } from "./todos/router";
 
 const app = express();
+app.use(bodyParser.json());
 
 // add openapi middleware
 app.use(oapi);

@@ -11,3 +11,13 @@ export const todoSchema = yup.object({
   title: yup.string().required(),
   completed: yup.boolean().required(),
 });
+
+export type TodoInput = {
+  title: string;
+  completed?: boolean;
+};
+
+export const todoInputSchema = yup.object({
+  title: yup.string().required(),
+  completed: yup.boolean(),
+});

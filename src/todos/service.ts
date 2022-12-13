@@ -1,10 +1,20 @@
-import { Todo } from "./domain";
+import { Todo, TodoInput } from "./domain";
 
 const todos: Todo[] = [];
 
 export const getTodos = () => todos;
 
-export const addTodo = (todo: Todo) => todos.push(todo);
+export const addTodo = ({ title, completed = false }: TodoInput) => {
+  const newTodo = {
+    id: Math.random().toString(36).substr(2, 9),
+    title,
+    completed,
+  };
+
+  todos.push(newTodo);
+
+  return newTodo;
+};
 
 export const getTodo = (id: string) => todos.find((t) => t.id === id);
 
