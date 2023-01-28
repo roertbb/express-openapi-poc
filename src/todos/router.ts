@@ -1,19 +1,9 @@
 import { Request, Response, Router } from "express";
 import { oapi } from "../openapi";
+import { validationFormatterMiddleware } from "../validation-formatter-middleware";
 import { TodoInput } from "./domain";
 import { todoComponentRef, todoInputComponentRef } from "./openapi";
 import { addTodo, getTodos } from "./service";
-
-// define parameters
-oapi.parameters("completed", {
-  name: "completed",
-  in: "query",
-  description: "Filter todos by completion status",
-  schema: {
-    type: "boolean",
-    required: false,
-  },
-});
 
 export const todosRouter = Router();
 
@@ -24,8 +14,15 @@ todosRouter.get(
     summary: "Get todos",
     description: "Endpoint to get all todos",
     parameters: [
-      // reference parameters
-      oapi.parameters("completed"),
+      {
+        name: "completed",
+        in: "query",
+        description: "Filter todos by completion status",
+        schema: {
+          type: "boolean",
+        },
+        required: true,
+      },
     ],
     responses: {
       200: {
@@ -41,8 +38,9 @@ todosRouter.get(
       },
     },
   }),
-  (req: Request<{}, {}, {}, { completed?: boolean }>, res: Response) => {
-    const { completed } = req.query;
+  validationFormatterMiddleware,
+  (req: Request<{}, {}, {}, { completed?: string }>, res: Response) => {
+    const completed = req.query.completed === "true" ? true : false;
 
     const todos = getTodos();
 
@@ -91,6 +89,7 @@ todosRouter.post(
       },
     },
   }),
+  validationFormatterMiddleware,
   (req: Request<{}, {}, TodoInput>, res: Response) => {
     const { title, completed } = req.body;
 
