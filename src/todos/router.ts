@@ -39,7 +39,7 @@ todosRouter.get(
     },
   }),
   validationFormatterMiddleware,
-  (req: Request<{}, {}, {}, { completed?: string }>, res: Response) => {
+  (req: Request<{}, {}, {}, { completed: string }>, res: Response) => {
     const completed = req.query.completed === "true" ? true : false;
 
     const todos = getTodos();
@@ -51,17 +51,6 @@ todosRouter.get(
     return res.json(todos);
   }
 );
-
-// define body
-oapi.requestBodies("TodoInput", {
-  description: "Todo input",
-  required: true,
-  content: {
-    "application/json": {
-      schema: todoInputComponentRef,
-    },
-  },
-});
 
 todosRouter.post(
   "/",
